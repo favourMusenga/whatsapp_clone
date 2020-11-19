@@ -1,0 +1,8 @@
+{
+  "name": "whatsapp_clone",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react",
+  "id": "9809f1c4"
+}

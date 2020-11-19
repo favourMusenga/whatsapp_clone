@@ -1,0 +1,3 @@
+export const ADD = 'ADD';
+export const UPDATE_USER_INFO = 'UPDATE_USER_INFO';
+export const UPDATE_USER_PREFERENCE = 'UPDATE_USER_PREFERENCE';

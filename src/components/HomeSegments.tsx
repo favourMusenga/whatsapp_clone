@@ -12,9 +12,9 @@ import {
   IonTitle,
   IonToolbar,
   IonBadge,
-  IonModal,
   IonList,
   IonItem,
+  IonPopover,
 } from '@ionic/react';
 import React, { useRef, useState } from 'react';
 import { camera, ellipsisVertical, search } from 'ionicons/icons';
@@ -33,7 +33,10 @@ export const HomeSegments: React.FC<HomeSegmentsProps> = () => {
   };
   const [segmentIndex, setSegmentIndex] = useState<string>('ion-sb-1');
   const [showPopover, setShowPopover] = useState<boolean>(false);
+  const [popoverEvent, setPopoverEvent] = useState<any>(undefined);
+
   const sliderRef = useRef<any>(null);
+  const popoverRef = useRef<any>(null);
 
   const slide = sliderRef.current!;
 
@@ -56,21 +59,27 @@ export const HomeSegments: React.FC<HomeSegmentsProps> = () => {
             <IonButton>
               <IonIcon icon={search} />
             </IonButton>
-            <IonButton onClick={() => setShowPopover(true)}>
+            <IonButton
+              onClick={(e) => {
+                e.persist();
+                setShowPopover(true);
+                setPopoverEvent(e);
+              }}>
               <IonIcon icon={ellipsisVertical} />
             </IonButton>
-            <IonModal
-              isOpen={showPopover}
-              cssClass='my-custom-class'
-              onDidDismiss={(e) => setShowPopover(false)}>
+            <IonPopover
+              ref={popoverRef}
+              onDidDismiss={() => setShowPopover(false)}
+              event={popoverEvent}
+              isOpen={showPopover}>
               <IonList>
-                <Link to='/setting'>
+                <Link to='/setting' onClick={() => setShowPopover(false)}>
                   <IonItem>
                     <IonLabel>Setting</IonLabel>
                   </IonItem>
                 </Link>
               </IonList>
-            </IonModal>
+            </IonPopover>
           </IonButtons>
         </IonToolbar>
         <IonToolbar color='primary'>

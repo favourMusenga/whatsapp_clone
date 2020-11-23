@@ -7,8 +7,6 @@ interface PrivateRouteProps extends RouteProps {}
 const PrivateRoute: React.FC<PrivateRouteProps> = (props) => {
   const { isRegistered } = useSelector((state: rootState) => state.userInfo);
 
-  console.log(isRegistered);
-
   if (isRegistered) {
     return <Route {...props} />;
   } else {

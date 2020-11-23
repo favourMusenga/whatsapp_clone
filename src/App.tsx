@@ -30,8 +30,10 @@ import Home from './pages/Home';
 import ContactsList from './pages/ContactsList';
 import OnBoard from './pages/OnBoard';
 import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 import ProfileDetails from './pages/ProfileDetails';
 import PrivateRoute from './components/PrivateRoute';
+
 import { connect, useDispatch } from 'react-redux';
 import { getUserInfo, setUserInfo } from './store/userActions';
 import { getPreferences, setPreferences } from './store/preferenceActions';
@@ -53,6 +55,7 @@ const App: React.FC = () => {
         <IonRouterOutlet>
           <Route path='/intro' component={OnBoard} exact={true} />
           <Route path='/signup' component={SignUp} exact={true} />
+          <Route path='/login' component={Login} exact={true} />
           <Route path='/profile' component={ProfileDetails} exact={true} />
           <PrivateRoute path='/home' component={Home} exact={true} />
           <PrivateRoute path='/chatroom' component={ChatRoom} exact={true} />

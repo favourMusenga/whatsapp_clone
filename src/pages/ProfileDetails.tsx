@@ -67,9 +67,11 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = () => {
       return;
     } else if (phoneNumber.length !== 10) {
       setErrorMsg('phone number must have 10 numbers');
+      return;
     }
     if (status === '') {
       setStatus('Hey there! I am using WhatsApp');
+      return;
     }
 
     const file: any = !isDataUrl.test(imageUrl)

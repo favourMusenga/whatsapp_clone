@@ -17,10 +17,10 @@ import { SignUpContainer } from '../components/styledComponent/SignUpstyles';
 import { useHistory } from 'react-router';
 import { setUserInfo } from '../store/userActions';
 import { useDispatch } from 'react-redux';
+import { logIn } from '../firebaseHelperFunctions';
 import { Link } from 'react-router-dom';
-interface SignUpProps {}
-
-const SignUp: React.FC<SignUpProps> = () => {
+interface LoginProps {}
+const Login: React.FC<LoginProps> = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -31,7 +31,7 @@ const SignUp: React.FC<SignUpProps> = () => {
     // Popup signin flow rather than redirect flow.
     signInFlow: 'redirect',
     // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: '/profile',
+    signInSuccessUrl: '/home',
     // We will display Google and Facebook as auth providers.
     signInOptions: [firebaseApp.auth.GoogleAuthProvider.PROVIDER_ID],
     callbacks: {
@@ -55,36 +55,31 @@ const SignUp: React.FC<SignUpProps> = () => {
       },
     },
   };
-  function onSubmitHandler(e: React.FormEvent<HTMLElement>) {
+  async function onSubmitHandler(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
-
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((user) => {
-        try {
-          dispatch(
-            setUserInfo({
-              email,
-              isRegistered: true,
-              password,
-              status: '',
-              username: '',
-            })
-          );
-          push('/profile');
-        } catch (error) {
-          console.log(error);
-        }
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
+    try {
+      const user = await logIn(email, password);
+      if (user) {
+        dispatch(
+          setUserInfo({
+            email,
+            isRegistered: true,
+            password,
+            status: '',
+            username: '',
+          })
+        );
+        push('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color='secondary'>
-          <IonTitle>sign up</IonTitle>
+          <IonTitle>login</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -113,23 +108,22 @@ const SignUp: React.FC<SignUpProps> = () => {
             <IonText>{error}</IonText>
             <br />
             <IonButton type='submit' color='secondary'>
-              sign up
+              log in
             </IonButton>
           </form>
           <p> or </p>
           <StyledFirebaseAuth firebaseAuth={auth} uiConfig={uiConfig} />
-
           <br />
           <IonText>
-            already have an account logIn
+            do have an account sign up
             <Link
-              to='/login'
+              to='/signup'
               style={{
                 color: 'blue',
                 textDecoration: 'underline',
                 padding: '5px',
               }}>
-              here?
+              here
             </Link>
           </IonText>
         </SignUpContainer>
@@ -137,4 +131,4 @@ const SignUp: React.FC<SignUpProps> = () => {
     </IonPage>
   );
 };
-export default SignUp;
+export default Login;

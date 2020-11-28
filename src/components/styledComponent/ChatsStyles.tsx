@@ -1,4 +1,3 @@
-import { type } from 'os';
 import styled from 'styled-components';
 
 export const ChatContainer = styled.div`
@@ -29,7 +28,7 @@ export const ChatInfo = styled.div`
 `;
 
 export const ChatProfileName = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #ccd2d2;
   margin: 5px;

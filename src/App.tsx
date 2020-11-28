@@ -58,7 +58,11 @@ const App: React.FC = () => {
           <Route path='/login' component={Login} exact={true} />
           <Route path='/profile' component={ProfileDetails} exact={true} />
           <PrivateRoute path='/home' component={Home} exact={true} />
-          <PrivateRoute path='/chatroom' component={ChatRoom} exact={true} />
+          <PrivateRoute
+            path='/chatroom/:id'
+            component={ChatRoom}
+            exact={true}
+          />
           <PrivateRoute path='/setting' component={Settiing} exact={true} />
           <PrivateRoute
             path='/contactList'

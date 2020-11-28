@@ -1,18 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { fireStorage } from '../firbaseConfig';
 
-interface useFirebaseStorageProps {}
-const useFirebaseStorage = (
-  imageDataUrl: string,
-  fileName: string,
-  userId: string,
-  callback: (url: string) => void
-) => {
+const useFirebaseStorage = () => {
   const [progress, setProgress] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
 
-  useEffect(() => {
+  function uploadImage(
+    imageDataUrl: string,
+    fileName: string,
+    userId: string,
+    callback: (url: string) => void
+  ) {
     const rootRef = fireStorage.ref();
     const storageRef = rootRef.child(`user/${userId}/${fileName}`);
 
@@ -32,8 +31,9 @@ const useFirebaseStorage = (
         callback(downloadUrl);
       }
     );
-  }, [imageDataUrl]);
+    return { url, error, progress };
+  }
 
-  return { url, error, progress };
+  return { uploadImage };
 };
 export default useFirebaseStorage;

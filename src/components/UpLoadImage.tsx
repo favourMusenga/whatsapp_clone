@@ -19,7 +19,8 @@ const UpLoadImage: React.FC<UpLoadImageProps> = ({
   fileName,
 }) => {
   const [message, setMessage] = useState<string>('');
-  const { progress, error, url } = useFirebaseStorage(
+  const { uploadImage } = useFirebaseStorage();
+  const { progress, error, url } = uploadImage(
     dataUrl,
     fileName,
     userId,
@@ -32,7 +33,7 @@ const UpLoadImage: React.FC<UpLoadImageProps> = ({
     if (setProgress) {
       setProgress(progress);
     }
-  }, [progress, setProgress, setMessage]);
+  }, [progress, setProgress, setMessage, url]);
   return (
     <>
       {progressionBar && (

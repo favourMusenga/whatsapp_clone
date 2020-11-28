@@ -1,5 +1,5 @@
 import { IonBadge } from '@ionic/react';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ChatContainer,
   ChatInfo,
@@ -11,24 +11,42 @@ import {
   OtherChatInfo,
   UnReadMesagesNumber,
 } from './styledComponent/ChatsStyles';
+import { getUserInfo } from '../firebaseHelperFunctions';
+import { DateTime } from 'luxon';
 
-interface ChatProps {}
-const Chat: React.FC<ChatProps> = () => {
+interface ChatProps {
+  contactId: string;
+  lastmessage: string;
+  time: number;
+}
+const Chat: React.FC<ChatProps> = ({ contactId, lastmessage, time }) => {
+  const [profilePic, setProfilePic] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+
+  (async () => {
+    const contactInfo = await getUserInfo(contactId);
+    setProfilePic(contactInfo?.profilePicUrl);
+    setUsername(contactInfo?.username);
+  })();
+
+  const timeOfLastMessage = DateTime.fromJSDate(new Date(time * 1000)).toFormat(
+    'HH:mm'
+  );
   return (
     <ChatContainer>
       <ChatProfilePic>
-        <img src='/assets/pics/man-with-beats.jpg' alt='profile pic' />
+        <img src={profilePic} alt='profile pic' />
       </ChatProfilePic>
       <ChatInfo>
         <ChatMessageInfo>
-          <ChatProfileName>favour</ChatProfileName>
-          <LastMessage>hello, how are you?</LastMessage>
+          <ChatProfileName>{username}</ChatProfileName>
+          <LastMessage>{lastmessage}</LastMessage>
         </ChatMessageInfo>
         <OtherChatInfo>
-          <LastTimeOfLastMessage>15:00</LastTimeOfLastMessage>
+          <LastTimeOfLastMessage>{timeOfLastMessage}</LastTimeOfLastMessage>
           <UnReadMesagesNumber>
             <IonBadge color='secondary' slot='end'>
-              2
+              0
             </IonBadge>
           </UnReadMesagesNumber>
         </OtherChatInfo>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   IonAvatar,
   IonBackButton,
@@ -8,6 +8,7 @@ import {
   IonImg,
   IonItem,
   IonLabel,
+  IonLoading,
   IonPage,
   IonToolbar,
 } from '@ionic/react';
@@ -16,6 +17,7 @@ import ChatBubble from '../components/ChatBubble';
 import InputArea from '../components/InputArea';
 import { ChatArea } from '../components/styledComponent/ChatRoomStyles';
 import { auth, firestore } from '../firbaseConfig';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { getUserInfo } from '../firebaseHelperFunctions';
 
 interface ChatRoomProps {}
@@ -23,7 +25,22 @@ const ChatRoom: React.FC<ChatRoomProps> = () => {
   const [profilePic, setProfilePic] = useState<string>('');
   const [username, setUsername] = useState<string>('');
 
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const chatAreaRef = useRef<HTMLDivElement>(null);
+
   const { id } = useParams<{ id: string }>();
+
+  const messageRef = firestore
+    .collection('message')
+    .doc(id)
+    .collection('messages')
+    .orderBy('timeSent');
+
+  const [messages, loading, error] = useCollectionData(messageRef, {
+    idField: 'id',
+  });
+
+  console.log(messages);
 
   const currentUser = auth.currentUser;
 
@@ -44,51 +61,12 @@ const ChatRoom: React.FC<ChatRoomProps> = () => {
     };
     getToolbarUserInfo();
   }, [currentUser, id]);
+  useEffect(() => {
+    console.log(spanRef.current);
+    console.log(chatAreaRef.current?.clientHeight);
 
-  const messages = [
-    {
-      id: 1,
-      sentBy: auth.currentUser?.uid,
-      message: 'hello friend',
-      dateSent: Date.now(),
-      image: '',
-    },
-    {
-      id: 2,
-      sentBy: 'uduyudxidsjchuidsi',
-      message: 'hello friend',
-      dateSent: Date.now(),
-      image: '',
-    },
-    {
-      id: 3,
-      sentBy: 'uduyudxidsjchuidsi',
-      message: 'how are you?',
-      dateSent: Date.now(),
-      image: '',
-    },
-    {
-      id: 4,
-      sentBy: auth.currentUser?.uid,
-      message: 'i am fine and you?',
-      dateSent: Date.now(),
-      image: '',
-    },
-    {
-      id: 5,
-      sentBy: 'uduyudxidsjchuidsi',
-      message: 'i am fine',
-      dateSent: Date.now(),
-      image: '',
-    },
-    {
-      id: 6,
-      sentBy: auth.currentUser?.uid,
-      message: 'okay',
-      dateSent: Date.now(),
-      image: '',
-    },
-  ];
+    spanRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatAreaRef.current?.clientHeight, messages]);
   return (
     <IonPage>
       <IonHeader>
@@ -106,18 +84,27 @@ const ChatRoom: React.FC<ChatRoomProps> = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <ChatArea>
-          {messages.map((message) => (
-            <ChatBubble
-              key={message.id}
-              date={message.dateSent}
-              message={message.message}
-              sentBy={message.sentBy!}
-              userId={currentUser?.uid!}
-            />
-          ))}
-          <InputArea groupId={id} user={currentUser!} />
-        </ChatArea>
+        {loading ? (
+          <IonLoading isOpen={loading} />
+        ) : (
+          <ChatArea ref={chatAreaRef}>
+            {messages &&
+              messages.map((message: any) => (
+                <ChatBubble
+                  key={message.id}
+                  date={
+                    message.timeSent ? message.timeSent.seconds : Date.now()
+                  }
+                  message={message.message}
+                  sentBy={message.sentby!}
+                  userId={currentUser?.uid!}
+                  pic={message.Pic}
+                />
+              ))}
+            <span ref={spanRef}></span>
+          </ChatArea>
+        )}
+        <InputArea groupId={id} user={currentUser!} />
       </IonContent>
     </IonPage>
   );

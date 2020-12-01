@@ -12,6 +12,7 @@ interface ChatBubbleProps {
   date: number;
   image?: string;
   userId: string;
+  pic: string;
 }
 const ChatBubble: React.FC<ChatBubbleProps> = ({
   date,
@@ -19,11 +20,13 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   sentBy,
   image,
   userId,
+  pic,
 }) => {
-  const time = DateTime.fromJSDate(new Date(date)).toFormat('HH:mm');
+  const time = DateTime.fromJSDate(new Date(date * 1000)).toFormat('HH:mm');
   return (
     <ChatBubbleContainer sentBy={sentBy === userId}>
-      <ChatMessage>{message}</ChatMessage>
+      {pic && <img src={pic} alt='message pic' />}
+      {message && <ChatMessage>{message}</ChatMessage>}
       <ChatDateSent>{time}</ChatDateSent>
     </ChatBubbleContainer>
   );

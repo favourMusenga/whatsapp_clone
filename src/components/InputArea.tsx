@@ -10,6 +10,7 @@ import {
   InputContainer,
   InputFieldArea,
 } from './styledComponent/ChatRoomStyles';
+import { group } from 'console';
 
 const { Toast } = Plugins;
 
@@ -59,6 +60,10 @@ const InputArea: React.FC<InputAreaProps> = ({ groupId, user }) => {
           text: 'message is sent',
           duration: 'long',
           position: 'bottom',
+        });
+        await firestore.collection('group').doc(groupId).update({
+          lastUpdated: firebaseApp.firestore.FieldValue.serverTimestamp(),
+          lastMessage: message,
         });
       }
     } catch (error) {

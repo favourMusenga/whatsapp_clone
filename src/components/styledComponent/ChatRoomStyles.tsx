@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const ChatArea = styled.div`
   width: 100%;
-  height: 100%;
   position: relative;
   padding: 15px 10px;
   overflow-y: auto;
@@ -11,7 +10,7 @@ export const ChatArea = styled.div`
 `;
 
 export const InputContainer = styled.section`
-  position: fixed;
+  position: sticky;
   bottom: 0px;
   left: 0px;
   background: #eee8dc;
@@ -34,7 +33,7 @@ export const ChatBubbleContainer = styled.article<chatContainerType>`
   margin-bottom: 10px;
   background-color: ${({ sentBy }) => (sentBy ? '#E2FFC7' : '#FFFFFF')};
   max-width: 50%;
-  padding: 0px 10px;
+  padding: 5px 10px 0px 10px;
 `;
 
 export const ChatMessage = styled.p`

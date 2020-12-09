@@ -44,8 +44,6 @@ const ChatRoom: React.FC<ChatRoomProps> = () => {
 
   const currentUser = auth.currentUser;
 
-  console.log(id);
-
   useEffect(() => {
     const getToolbarUserInfo = async () => {
       const groupRef = firestore.collection('group').doc(id);

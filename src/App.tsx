@@ -34,7 +34,7 @@ import Login from './pages/Login';
 import ProfileDetails from './pages/ProfileDetails';
 import PrivateRoute from './components/PrivateRoute';
 
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { getUserInfo, setUserInfo } from './store/userActions';
 import { getPreferences, setPreferences } from './store/preferenceActions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
@@ -44,10 +44,19 @@ import { UserState } from './store/types';
 
 const App: React.FC = () => {
   const dispatch: ThunkDispatch<UserState, any, AnyAction> = useDispatch();
+  const { theme } = useSelector((store: rootState) => store.userPreference);
   useEffect(() => {
     dispatch(getUserInfo());
     dispatch(getPreferences());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [theme]);
 
   return (
     <IonApp>

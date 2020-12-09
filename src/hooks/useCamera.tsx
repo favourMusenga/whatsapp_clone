@@ -8,14 +8,14 @@ import {
   CameraPhoto,
   FilesystemDirectory,
 } from '@capacitor/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { isPlatform } from '@ionic/react';
 
 interface Photo {
   filepath: string;
   webViewPath?: string;
 }
-const useCamera = () => {
+const useCamera = (sourceOfPic: 'prompt' | 'camera' = 'camera') => {
   // state to store the picture taken
   const [pic, setPic] = useState<Photo>({ filepath: '' });
 
@@ -25,7 +25,8 @@ const useCamera = () => {
 
   const options: CameraOptions = {
     resultType: CameraResultType.Uri,
-    source: CameraSource.Camera,
+    source:
+      sourceOfPic === 'prompt' ? CameraSource.Prompt : CameraSource.Camera,
     quality: 100,
   };
   const takePic = async () => {
@@ -52,8 +53,11 @@ const useCamera = () => {
         webViewPath: cameraPic.webPath,
       };
     }
-    setPic(newPic);
+    setPic(() => {
+      return newPic;
+    });
   };
   return { takePic, photo: pic };
 };
+
 export default useCamera;

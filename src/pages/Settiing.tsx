@@ -37,6 +37,7 @@ import useFirebaseStorage from '../hooks/useFirebaseStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { rootState } from '../store/rootReducer';
 import { useHistory } from 'react-router';
+import { setUserInfo } from '../store/userActions';
 interface SettiingProps {}
 
 const Settiing: React.FC<SettiingProps> = () => {
@@ -257,7 +258,16 @@ const Settiing: React.FC<SettiingProps> = () => {
             color='light'
             onClick={() =>
               signOut(() => {
-                console.log('signed out');
+                dispatch(
+                  setUserInfo({
+                    email: '',
+                    isRegistered: false,
+                    username: '',
+                    status: '',
+                    password: '',
+                  })
+                );
+                push('/login');
               })
             }>
             <IonLabel>sign out</IonLabel>

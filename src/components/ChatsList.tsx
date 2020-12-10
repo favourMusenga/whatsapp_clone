@@ -6,6 +6,7 @@ import { auth } from '../firbaseConfig';
 import useGetGroups from '../hooks/useGetGroups';
 
 import Chat from './Chat';
+import SkeletonChatBox from './SkeletonChatBox';
 
 interface ChatsListProps {}
 const ChatsList: React.FC<ChatsListProps> = () => {
@@ -13,7 +14,19 @@ const ChatsList: React.FC<ChatsListProps> = () => {
   const userId = auth.currentUser?.uid;
   return (
     <>
-      {loading && <IonLoading isOpen={loading} />}
+      {loading && (
+        <>
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+          <SkeletonChatBox />
+        </>
+      )}
       {groups &&
         groups.map((group: any) => {
           const [contactId] = group.members.filter(

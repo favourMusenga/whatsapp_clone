@@ -1,11 +1,15 @@
 import {
   IonButton,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
   IonInput,
   IonItem,
   IonLabel,
+  IonLoading,
   IonPage,
+  IonRow,
   IonText,
   IonTitle,
   IonToolbar,
@@ -24,6 +28,7 @@ const Login: React.FC<LoginProps> = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
   const { push } = useHistory();
@@ -37,6 +42,7 @@ const Login: React.FC<LoginProps> = () => {
     callbacks: {
       signInSuccessWithAuthResult: (authResults: any, redirectUrl: string) => {
         const user = authResults.user;
+        setLoading(true);
         try {
           dispatch(
             setUserInfo({
@@ -73,6 +79,7 @@ const Login: React.FC<LoginProps> = () => {
       }
     } catch (error) {
       console.log(error);
+      setError(error.message);
     }
   }
   return (
@@ -84,6 +91,7 @@ const Login: React.FC<LoginProps> = () => {
       </IonHeader>
       <IonContent>
         <SignUpContainer>
+          <IonLoading isOpen={loading} />
           <form onSubmit={onSubmitHandler}>
             <IonItem>
               <IonLabel position='floating'>enter email address</IonLabel>
@@ -105,11 +113,21 @@ const Login: React.FC<LoginProps> = () => {
               />
             </IonItem>
             <br />
-            <IonText>{error}</IonText>
+            {error && (
+              <IonItem lines='none'>
+                <p>{error}</p>
+              </IonItem>
+            )}
             <br />
-            <IonButton type='submit' color='secondary'>
-              log in
-            </IonButton>
+            <IonGrid>
+              <IonRow class='ion-justify-content-center ion-align-items-center'>
+                <IonCol class='ion-justify-content-center ion-align-items-center'>
+                  <IonButton type='submit' color='secondary'>
+                    log in
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
           </form>
           <p> or </p>
           <StyledFirebaseAuth firebaseAuth={auth} uiConfig={uiConfig} />

@@ -17,7 +17,7 @@ const IntroSlider: React.FC<IntroSliderProps> = () => {
   const slider = slideRef.current!;
   async function handleOnClick() {
     if (await slider.isEnd()) {
-      push('/signup');
+      push('/login');
       return;
     }
 

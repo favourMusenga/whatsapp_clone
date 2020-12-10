@@ -1,19 +1,19 @@
 import styled from 'styled-components';
 
-export const ChatArea = styled.div`
+export const ChatArea = styled.div<InputThemeType>`
   width: 100%;
   position: relative;
   padding: 15px 10px;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #eee8dc;
+  background: ${({ theme }) => (theme === 'dark' ? ' #101d25' : '#eee8dc')};
 `;
 
-export const InputContainer = styled.section`
+export const InputContainer = styled.section<InputThemeType>`
   position: sticky;
   bottom: 0px;
   left: 0px;
-  background: #eee8dc;
+  background: ${({ theme }) => (theme === 'dark' ? ' #101d25' : '#eee8dc')};
   width: 100%;
   padding: 15px 10px;
   display: flex;
@@ -31,8 +31,16 @@ export const InputFieldArea = styled.section`
 export const ChatBubbleContainer = styled.article<chatContainerType>`
   margin-left: ${({ sentBy }) => (sentBy ? '50%' : '0px')};
   margin-bottom: 10px;
-  background-color: ${({ sentBy }) => (sentBy ? '#E2FFC7' : '#FFFFFF')};
+  background-color: ${({ sentBy, theme }) =>
+    sentBy
+      ? theme === 'dark'
+        ? '#00b09c'
+        : '#E2FFC7'
+      : theme === 'dark'
+      ? ' #303838'
+      : '#FFFFFF'};
   max-width: 50%;
+  color: ${({ theme }) => (theme === 'dark' ? ' #ffffff' : '')};
   padding: 5px 10px 0px 10px;
 `;
 
@@ -49,4 +57,9 @@ export const ChatDateSent = styled.p`
 
 type chatContainerType = {
   sentBy: boolean;
+  theme: string;
+};
+
+type InputThemeType = {
+  theme: string;
 };

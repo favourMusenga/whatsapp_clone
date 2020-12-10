@@ -11,7 +11,6 @@ import {
   IonSlides,
   IonTitle,
   IonToolbar,
-  IonBadge,
   IonList,
   IonItem,
   IonPopover,
@@ -24,6 +23,8 @@ import Calls from './Calls';
 
 import './HomeSegments.css';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { rootState } from '../store/rootReducer';
 
 interface HomeSegmentsProps {}
 export const HomeSegments: React.FC<HomeSegmentsProps> = () => {
@@ -34,6 +35,8 @@ export const HomeSegments: React.FC<HomeSegmentsProps> = () => {
   const [segmentIndex, setSegmentIndex] = useState<string>('ion-sb-1');
   const [showPopover, setShowPopover] = useState<boolean>(false);
   const [popoverEvent, setPopoverEvent] = useState<any>(undefined);
+
+  const { theme } = useSelector((store: rootState) => store.userPreference);
 
   const sliderRef = useRef<any>(null);
   const popoverRef = useRef<any>(null);
@@ -86,14 +89,13 @@ export const HomeSegments: React.FC<HomeSegmentsProps> = () => {
           <IonSegment
             value={segmentIndex}
             onIonChange={segmentchange}
-            color='secondary'>
+            color='secondary'
+            style={{ color: theme === 'light' ? '#ffffff' : '' }}>
             <IonSegmentButton layout='icon-start'>
               <IonIcon icon={camera} />
             </IonSegmentButton>
             <IonSegmentButton>
-              <IonLabel>
-                CHATS <IonBadge color='secondary'>5</IonBadge>
-              </IonLabel>
+              <IonLabel>CHATS</IonLabel>
             </IonSegmentButton>
             <IonSegmentButton>
               <IonLabel>STATUS</IonLabel>

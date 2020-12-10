@@ -5,12 +5,13 @@ import { Plugins } from '@capacitor/core';
 import { firebaseApp, firestore } from '../firbaseConfig';
 import useCamera from '../hooks/useCamera';
 import useFirebaseStorage from '../hooks/useFirebaseStorage';
-import { getDataUrl } from '../utli';
+import { displayToast, getDataUrl } from '../utli';
 import {
   InputContainer,
   InputFieldArea,
 } from './styledComponent/ChatRoomStyles';
-import { group } from 'console';
+import { useSelector } from 'react-redux';
+import { rootState } from '../store/rootReducer';
 
 const { Toast } = Plugins;
 
@@ -23,6 +24,8 @@ const InputArea: React.FC<InputAreaProps> = ({ groupId, user }) => {
   const [message, setMessage] = useState<string>('');
   const [showCameraIcon, setShowCameraIcon] = useState<boolean>(true);
   const { uploadImage } = useFirebaseStorage();
+
+  const { theme } = useSelector((store: rootState) => store.userPreference);
 
   const { photo, takePic } = useCamera();
   useEffect(() => {
@@ -56,22 +59,14 @@ const InputArea: React.FC<InputAreaProps> = ({ groupId, user }) => {
       });
       if (results) {
         setMessage('');
-        await Toast.show({
-          text: 'message is sent',
-          duration: 'long',
-          position: 'bottom',
-        });
+        await displayToast('message is sent');
         await firestore.collection('group').doc(groupId).update({
           lastUpdated: firebaseApp.firestore.FieldValue.serverTimestamp(),
           lastMessage: message,
         });
       }
     } catch (error) {
-      await Toast.show({
-        text: 'something went wrong',
-        duration: 'long',
-        position: 'bottom',
-      });
+      await displayToast('something went wrong');
     }
   }
   async function sendPic() {
@@ -98,11 +93,7 @@ const InputArea: React.FC<InputAreaProps> = ({ groupId, user }) => {
                 timeSent: firebaseApp.firestore.FieldValue.serverTimestamp(),
               });
               if (results) {
-                await Toast.show({
-                  text: 'pic is sent',
-                  duration: 'long',
-                  position: 'bottom',
-                });
+                await displayToast('pic is sent');
               }
             } catch (error) {
               console.log(error);
@@ -114,15 +105,11 @@ const InputArea: React.FC<InputAreaProps> = ({ groupId, user }) => {
         }
       }
     } catch (error) {
-      await Toast.show({
-        text: 'something went wrong',
-        duration: 'long',
-        position: 'bottom',
-      });
+      await displayToast('something went wrong');
     }
   }
   return (
-    <InputContainer>
+    <InputContainer theme={theme}>
       <InputFieldArea>
         <IonTextarea
           autoGrow={true}

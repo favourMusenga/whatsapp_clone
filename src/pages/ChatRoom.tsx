@@ -19,11 +19,15 @@ import { ChatArea } from '../components/styledComponent/ChatRoomStyles';
 import { auth, firestore } from '../firbaseConfig';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { getUserInfo } from '../firebaseHelperFunctions';
+import { useSelector } from 'react-redux';
+import { rootState } from '../store/rootReducer';
 
 interface ChatRoomProps {}
 const ChatRoom: React.FC<ChatRoomProps> = () => {
   const [profilePic, setProfilePic] = useState<string>('');
   const [username, setUsername] = useState<string>('');
+
+  const { theme } = useSelector((store: rootState) => store.userPreference);
 
   const spanRef = useRef<HTMLSpanElement>(null);
   const chatAreaRef = useRef<HTMLDivElement>(null);
@@ -39,8 +43,6 @@ const ChatRoom: React.FC<ChatRoomProps> = () => {
   const [messages, loading, error] = useCollectionData(messageRef, {
     idField: 'id',
   });
-
-  console.log(messages);
 
   const currentUser = auth.currentUser;
 
@@ -60,9 +62,6 @@ const ChatRoom: React.FC<ChatRoomProps> = () => {
     getToolbarUserInfo();
   }, [currentUser, id]);
   useEffect(() => {
-    console.log(spanRef.current);
-    console.log(chatAreaRef.current?.clientHeight);
-
     spanRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatAreaRef.current?.clientHeight, messages]);
   return (
@@ -85,7 +84,7 @@ const ChatRoom: React.FC<ChatRoomProps> = () => {
         {loading ? (
           <IonLoading isOpen={loading} />
         ) : (
-          <ChatArea ref={chatAreaRef}>
+          <ChatArea theme={theme} ref={chatAreaRef}>
             {messages &&
               messages.map((message: any) => (
                 <ChatBubble

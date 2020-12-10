@@ -44,11 +44,7 @@ const Chat: React.FC<ChatProps> = ({ contactId, lastmessage, time }) => {
         </ChatMessageInfo>
         <OtherChatInfo>
           <LastTimeOfLastMessage>{timeOfLastMessage}</LastTimeOfLastMessage>
-          <UnReadMesagesNumber>
-            <IonBadge color='secondary' slot='end'>
-              0
-            </IonBadge>
-          </UnReadMesagesNumber>
+          <UnReadMesagesNumber></UnReadMesagesNumber>
         </OtherChatInfo>
       </ChatInfo>
     </ChatContainer>
